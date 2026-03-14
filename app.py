@@ -106,6 +106,9 @@ if "history" not in st.session_state:
 
 st.subheader("Make a guess")
 
+# Made a slight change to the UI layout by moving the "New Game" button above the guess input. The "New Game" button is now more prominently placed at the top of the game interface for better accessibility.
+new_game = st.button("New Game 🔁")
+
 # Calculate remaining attempts for display in the UI.
 # Streamlit reruns the script from top to bottom whenever a button is clicked.
 # Because the attempt counter is incremented later in the script, the UI would
@@ -113,17 +116,29 @@ st.subheader("Make a guess")
 # attempts here so the interface can immediately reflect the submitted guess.
 remaining_attempts = attempt_limit - st.session_state.attempts
 
+# Display the guessing range and instructions at the top of the game interface. This message remains static and does not change with each guess, providing a consistent reminder of the game's objective and the valid input range for the user.
+st.info(
+    f"Guess a number between 1 and 100. ")
 
 # Create UI controls (Submit, New Game, Show Hint).
 # Buttons must be defined before we reference their values.
 # We keep them here to preserve the original UI layout of the app.
-col1, col2, col3 = st.columns(3)
-with col1:
-    submit = st.button("Submit Guess 🚀")
-with col2:
-    new_game = st.button("New Game 🔁")
-with col3:
-    show_hint = st.checkbox("Show hint", value=True)
+
+# Form allows pressing Enter to submit the guess
+with st.form("guess_form"):
+
+    raw_guess = st.text_input(
+        "Enter your guess:",
+        key=f"guess_input_{difficulty}"
+    )
+
+    col1, col2= st.columns(2)
+
+    with col1:
+        submit = st.form_submit_button("Submit Guess 🚀")
+
+    with col2:
+        show_hint = st.checkbox("Show hint", value=True)
 
 
 # If the user clicks "Submit", Streamlit reruns the script immediately.
@@ -136,28 +151,20 @@ if submit:
 # Ensure remaining attempts doesn't go negative, which could happen if the user clicks "Submit" after reaching the attempt limit.
 remaining_attempts = max(0, remaining_attempts)
 
+# We have moved the info message about the guessing range to the top of the interface for better visibility. The remaining attempts info is now displayed separately below the input controls, allowing it to update dynamically with each guess while keeping the instructions consistently visible at the top.
 # Display the guessing range and remaining attempts.
 # This message updates dynamically based on the current difficulty
 # and the calculated number of attempts left.
 st.info(
-    f"Guess a number between 1 and 100. "
     f"Attempts left: {remaining_attempts}"
 )
 
-# Note: the developer debug panel shows the actual session_state values.
-# The attempts counter is incremented later in the script, so the debug
-# info may briefly show the previous value during the same rerun.
-with st.expander("Developer Debug Info"):
-    st.write("Secret:", st.session_state.secret)
-    st.write("Attempts:", st.session_state.attempts)
-    st.write("Score:", st.session_state.score)
-    st.write("Difficulty:", difficulty)
-    st.write("History:", st.session_state.history)
 
-raw_guess = st.text_input(
-    "Enter your guess:",
-    key=f"guess_input_{difficulty}"
-)
+
+# raw_guess = st.text_input(
+#     "Enter your guess:",
+#     key=f"guess_input_{difficulty}"
+# )
 
 if new_game:
     st.session_state.attempts = 0
@@ -214,6 +221,19 @@ if submit:
                     f"The secret was {st.session_state.secret}. "
                     f"Score: {st.session_state.score}"
                 )
+
+
+# We have moved the developer debug info to the bottom of the script so it reflects the latest state after processing the user's guess. This way, when a user submits a guess, they can see how the internal state (like attempts and score) has changed in response to their action.
+
+# Note: the developer debug panel shows the actual session_state values.
+# The attempts counter is incremented later in the script, so the debug
+# info may briefly show the previous value during the same rerun.
+with st.expander("Developer Debug Info"):
+    st.write("Secret:", st.session_state.secret)
+    st.write("Attempts:", st.session_state.attempts)
+    st.write("Score:", st.session_state.score)
+    st.write("Difficulty:", difficulty)
+    st.write("History:", st.session_state.history)
 
 st.divider()
 st.caption("Built by an AI that claims this code is production-ready.")
