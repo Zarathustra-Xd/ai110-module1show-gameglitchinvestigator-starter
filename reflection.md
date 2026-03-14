@@ -8,7 +8,13 @@ Answer each question in 3 to 5 sentences. Be specific and honest about what actu
 - List at least two concrete bugs you noticed at the start  
   (for example: "the hints were backwards").
 
----
+-> Allowed attempts shows 7, when it's supposed to be 8.
+-> Pressing Enter doesn't submit the guess.
+-> Hints are reversed.
+-> "Out of attempts" error message shows up even when the attemps left is 1.
+-> New game button does not renews Attemps, Score, and History. It doesn't start a new game.
+-> Whe you change the difficulty level, it still says "Guess a number between 1 and 100"
+
 
 ## 2. How did you use AI as a teammate?
 
