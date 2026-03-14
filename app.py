@@ -132,7 +132,9 @@ with col3:
 # This prevents the first guess from incorrectly showing the full attempt count.
 if submit:
     remaining_attempts -= 1
-
+    
+# Ensure remaining attempts doesn't go negative, which could happen if the user clicks "Submit" after reaching the attempt limit.
+remaining_attempts = max(0, remaining_attempts)
 
 # Display the guessing range and remaining attempts.
 # This message updates dynamically based on the current difficulty
@@ -142,6 +144,9 @@ st.info(
     f"Attempts left: {remaining_attempts}"
 )
 
+# Note: the developer debug panel shows the actual session_state values.
+# The attempts counter is incremented later in the script, so the debug
+# info may briefly show the previous value during the same rerun.
 with st.expander("Developer Debug Info"):
     st.write("Secret:", st.session_state.secret)
     st.write("Attempts:", st.session_state.attempts)
@@ -153,8 +158,6 @@ raw_guess = st.text_input(
     "Enter your guess:",
     key=f"guess_input_{difficulty}"
 )
-
-
 
 if new_game:
     st.session_state.attempts = 0
