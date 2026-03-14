@@ -110,7 +110,7 @@ remaining_attempts = attempt_limit - st.session_state.attempts
 
 # Display the guessing range and instructions at the top of the game interface. This message remains static and does not change with each guess, providing a consistent reminder of the game's objective and the valid input range for the user.
 st.info(
-    f"Guess a number between 1 and 100. ")
+    f"Guess a number between {low} and {high}. ")
 
 # Create UI controls (Submit, New Game, Show Hint).
 # Buttons must be defined before we reference their values.
