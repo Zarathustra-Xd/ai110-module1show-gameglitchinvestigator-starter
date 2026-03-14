@@ -93,7 +93,7 @@ if "secret" not in st.session_state:
     st.session_state.secret = random.randint(low, high)
 
 if "attempts" not in st.session_state:
-    st.session_state.attempts = 1
+    st.session_state.attempts = 0
 
 if "score" not in st.session_state:
     st.session_state.score = 0
@@ -106,9 +106,40 @@ if "history" not in st.session_state:
 
 st.subheader("Make a guess")
 
+# Calculate remaining attempts for display in the UI.
+# Streamlit reruns the script from top to bottom whenever a button is clicked.
+# Because the attempt counter is incremented later in the script, the UI would
+# normally display the old value on the first guess. We calculate the remaining
+# attempts here so the interface can immediately reflect the submitted guess.
+remaining_attempts = attempt_limit - st.session_state.attempts
+
+
+# Create UI controls (Submit, New Game, Show Hint).
+# Buttons must be defined before we reference their values.
+# We keep them here to preserve the original UI layout of the app.
+col1, col2, col3 = st.columns(3)
+with col1:
+    submit = st.button("Submit Guess 🚀")
+with col2:
+    new_game = st.button("New Game 🔁")
+with col3:
+    show_hint = st.checkbox("Show hint", value=True)
+
+
+# If the user clicks "Submit", Streamlit reruns the script immediately.
+# The attempt counter is incremented later in the logic, so we temporarily
+# subtract 1 here to show the correct remaining attempts in the UI.
+# This prevents the first guess from incorrectly showing the full attempt count.
+if submit:
+    remaining_attempts -= 1
+
+
+# Display the guessing range and remaining attempts.
+# This message updates dynamically based on the current difficulty
+# and the calculated number of attempts left.
 st.info(
     f"Guess a number between 1 and 100. "
-    f"Attempts left: {attempt_limit - st.session_state.attempts}"
+    f"Attempts left: {remaining_attempts}"
 )
 
 with st.expander("Developer Debug Info"):
@@ -123,13 +154,7 @@ raw_guess = st.text_input(
     key=f"guess_input_{difficulty}"
 )
 
-col1, col2, col3 = st.columns(3)
-with col1:
-    submit = st.button("Submit Guess 🚀")
-with col2:
-    new_game = st.button("New Game 🔁")
-with col3:
-    show_hint = st.checkbox("Show hint", value=True)
+
 
 if new_game:
     st.session_state.attempts = 0
