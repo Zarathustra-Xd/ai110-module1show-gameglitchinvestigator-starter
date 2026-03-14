@@ -14,6 +14,7 @@ Answer each question in 3 to 5 sentences. Be specific and honest about what actu
 -> "Out of attempts" error message shows up even when the attemps left is 1. It should show up when the attempts left is 0.
 -> New game button does not renews Attemps, Score, and History. It doesn't start a new game. It should start a fresh game with all the attributes renewed.
 -> Whe you change the difficulty level, it still says "Guess a number between 1 and 100." It should change according to the difficulty level.
+-> The difficulty level are not set according to the actual difficulty of the game. Guessing between 1 to 100 should be harder than guessing between 1 to 50. But in our program, hard is 1 to 50 and normal is 1 to 100.
 
 
 ## 2. How did you use AI as a teammate?
